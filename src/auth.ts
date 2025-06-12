@@ -10,7 +10,12 @@ if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
   throw new Error('Missing Github OAuth Credentials')
 }
 
-export const {handlers: {GET, POST}, auth, signOut, signIn} = NextAuth({
+export const {
+  handlers: { GET, POST },
+  auth,
+  signOut,
+  signIn,
+} = NextAuth({
   adapter: PrismaAdapter(db),
   providers: [
     GitHub({
@@ -18,13 +23,14 @@ export const {handlers: {GET, POST}, auth, signOut, signIn} = NextAuth({
       clientSecret: GITHUB_CLIENT_SECRET,
     }),
   ],
-  // //usually not needed. bug: session.user does not get id assigned to it automatically. so manually doing it.
-  // callbacks: {
-  //     async session({session, user}: any){
-  //         if (session && user) {
-  //             session.user.id = user.id
-  //         }
-  //         return session
-  //     }
-  // }
+  // usually not needed. bug: session.user does not get id assigned to it automatically.
+  // it works for server components but still not for client components using useSession
+  callbacks: {
+    async session({ session, user }: any) {
+      if (session && user) {
+        session.user.id = user.id
+      }
+      return session
+    },
+  },
 })
