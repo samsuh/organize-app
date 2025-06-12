@@ -23,5 +23,5 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - run local docker desktop to run postgres
 - in .env.local
   - `DATABASE_URL="postgresql://<username>@localhost:5432/<dbname>?schema=public"`
-  - add AUTH_SECRET, GITHUB_CLIENT, GITHUB_CLIENT_SECRET 
-- start up the postgres instance locally in a separate terminal window using `npm run start:db`
+  - add AUTH_SECRET (used by next auth), GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
+- start up the postgres instance locally in a separate terminal window using `npm run start:db` while docker is active
