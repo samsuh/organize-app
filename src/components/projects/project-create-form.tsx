@@ -48,6 +48,15 @@ export default function ProjectCreateForm() {
               isInvalid={!!formState.errors.description}
               errorMessage={formState.errors.description?.join(', ')}
             />
+            <Input
+              name='balance'
+              type='number'
+              label='Initial Treasury Deposit (100 credits minimum)'
+              labelPlacement='outside'
+              placeholder='0'
+              isInvalid={!!formState.errors.balance}
+              errorMessage={formState.errors.balance?.join(', ')}
+            />
             {formState.errors._form ? (
               <div className='text-red-600 border border-red-600 p-2 rounded-md bg-red-100'>
                 {formState.errors._form.join(', ')}

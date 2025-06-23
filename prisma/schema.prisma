@@ -65,6 +65,7 @@ model Project {
   id          String @id @default(cuid())
   slug        String @unique
   description String
+  balance     Int @default(0)
   tasks       Task[]
 
   createdAt DateTime @default(now())
