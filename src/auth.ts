@@ -28,7 +28,8 @@ export const {
   callbacks: {
     async session({ session, user }: any) {
       if (session && user) {
-        session.user.id = user.id
+        // session.user.id = user.id
+        // session.user.userBalance = user.userBalance
       }
       return session
     },

@@ -53,7 +53,11 @@ export async function createProject(
 
   let project: Project
   //Add Balance check
+  console.log('session is:', session)
+  console.log('userBalance is:', session.user)
+  console.log('userBalance is:', session.user.userBalance)
   //Deduct Balance
+
   try {
     project = await db.project.create({
       data: {

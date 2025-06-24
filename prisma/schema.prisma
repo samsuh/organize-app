@@ -47,6 +47,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  userBalance   Int @default(0)
   accounts      Account[]
   sessions      Session[]
   Task          Task[]
