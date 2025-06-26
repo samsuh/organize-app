@@ -78,6 +78,7 @@ model Task {
   title   String
   content String
   userId  String
+  taskCost  Int
   projectId String
 
   createdAt DateTime @default(now())

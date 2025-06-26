@@ -3,7 +3,7 @@ import paths from '@/paths'
 import { Chip } from '@nextui-org/react'
 import Link from 'next/link'
 
-//reach into db, get list of projects, then display it
+//reach into db, get list of all projects, then display it
 export default async function ProjectList() {
   const projects = await db.project.findMany()
 
