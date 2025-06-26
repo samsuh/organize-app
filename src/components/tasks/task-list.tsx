@@ -1,5 +1,3 @@
-import { db } from '@/db'
-
-export default async function TaskList() {
+export default function TaskList() {
   // const tasks = await db.task.findMany()
 }

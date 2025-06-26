@@ -17,7 +17,7 @@ export default async function ProjectShowPage({
         <h1 className='text-2xl font-bold mb-2'>{slug}</h1>
       </div>
       <div>
-        <TaskCreateForm />
+        <TaskCreateForm slug={slug} />
       </div>
     </div>
   )

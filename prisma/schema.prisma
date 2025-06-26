@@ -76,7 +76,7 @@ model Project {
 model Task {
   id      String @id @default(cuid())
   title   String
-  content String
+  description String
   userId  String
   taskCost  Int
   projectId String

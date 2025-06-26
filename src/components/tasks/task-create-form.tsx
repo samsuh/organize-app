@@ -12,10 +12,17 @@ import {
 } from '@nextui-org/react'
 import FormButton from '@/components/common/form-button'
 
-export default function TaskCreateForm() {
-  const [formState, action, isPending] = useActionState(actions.createTask, {
-    errors: {},
-  })
+interface TaskCreateFormProps {
+  slug: string
+}
+
+export default function TaskCreateForm({ slug }: TaskCreateFormProps) {
+  const [formState, action, isPending] = useActionState(
+    actions.createTask.bind(null, slug),
+    {
+      errors: {},
+    }
+  )
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -51,13 +58,13 @@ export default function TaskCreateForm() {
               errorMessage={formState.errors.description?.join(', ')}
             />
             <Input
-              name='cost'
+              name='taskCost'
               type='number'
               label='Estimated Cost to complete Task (in credits)'
               labelPlacement='outside'
               placeholder='5'
-              isInvalid={!!formState.errors.cost}
-              errorMessage={formState.errors.cost?.join(', ')}
+              isInvalid={!!formState.errors.taskCost}
+              errorMessage={formState.errors.taskCost?.join(', ')}
             />
             {formState.errors._form ? (
               <div className='text-red-600 border border-red-600 p-2 rounded-md bg-red-100'>

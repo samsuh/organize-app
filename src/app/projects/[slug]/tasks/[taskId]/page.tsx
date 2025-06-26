@@ -1,3 +1,7 @@
-export default function TaskShowPage() {
-  return <div>Task Show Page</div>
+export default async function TaskShowPage() {
+  return (
+    <div>
+      <h3>Task Show Page</h3>
+    </div>
+  )
 }
