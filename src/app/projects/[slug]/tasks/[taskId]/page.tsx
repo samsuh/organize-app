@@ -19,6 +19,9 @@ export default async function TaskShowPage({ params }: TaskShowPageProps) {
       >
         {'< '} Back to {slug}
       </Link>
+      {/* <TaskShow />
+      <CommentCreateForm taskId={taskId} startOpen />
+      <CommentList comments={comments} /> */}
     </div>
   )
 }
