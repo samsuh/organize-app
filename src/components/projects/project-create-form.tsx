@@ -19,16 +19,7 @@ export default function ProjectCreateForm() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
-    let n8nWebhookResponse = await fetch(
-      'http://localhost:5678/webhook-test/58cdf091-ac53-4b76-bc72-a16e8663e2e7',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData.get('description')),
-      }
-    )
+
     startTransition(() => {
       action(formData)
     })

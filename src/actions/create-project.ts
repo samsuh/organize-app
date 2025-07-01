@@ -1,6 +1,6 @@
 'use server'
 
-import type { Project } from '@prisma/client'
+import type { Project, Task } from '@prisma/client'
 import { z } from 'zod'
 import { auth } from '@/auth'
 import { db } from '@/db'
@@ -52,6 +52,7 @@ export async function createProject(
   }
 
   let project: Project
+  // let n8nWebhookResponse
   //Add Balance check
   console.log('session is:', session)
   console.log('userBalance is:', session.user)
@@ -66,6 +67,45 @@ export async function createProject(
         balance: result.data.balance,
       },
     })
+
+    //n8n call works and is submitted, but need to bring the result back into the codebase to populate tasks in db then render.
+    const n8nWebhookResponse = await fetch(
+      'http://localhost:5678/webhook-test/58cdf091-ac53-4b76-bc72-a16e8663e2e7',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData.get('description')),
+      }
+    )
+    const tasks = await n8nWebhookResponse.json()
+    console.log(
+      'tasks destructured from n8nWebhookResponse after creating project and then doing the webhook POST:',
+      tasks
+    )
+
+    // Exists in Task Schema
+    // taskTitle: 'Analyze Competitor Accounts',
+    // description: 'Conduct an analysis of other successful motorcycle Instagram accounts to identify best practices.',
+    // taskCost: '45'
+
+    // Not yet added to Task Schema
+    // deliverable: 'A report summarizing key findings and strategies from competitor accounts.',
+    // acceptanceCriteria: 'The report provides insights into at least 5 competitor accounts and includes actionable takeaways.',
+    // dependencies: 'None',
+
+    if (Array.isArray(tasks) && tasks.length > 0) {
+      await db.task.createMany({
+        data: tasks.map((task) => ({
+          title: task.taskTitle,
+          description: task.description,
+          taskCost: Number(task.taskCost),
+          projectId: project.id,
+          userId: session.user.id,
+        })),
+      })
+    }
   } catch (err: unknown) {
     if (err instanceof Error) {
       return {
