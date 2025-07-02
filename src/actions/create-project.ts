@@ -19,6 +19,7 @@ const createProjectSchema = z.object({
   balance: z
     .number({ message: 'Initial Deposit must be at least 100 credits' })
     .min(100),
+  owner: z.string(),
 })
 
 interface CreateProjectFormState {
@@ -65,6 +66,7 @@ export async function createProject(
         slug: result.data.name,
         description: result.data.description,
         balance: result.data.balance,
+        ownerId: session.user.id,
       },
     })
 
