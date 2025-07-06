@@ -23,13 +23,10 @@ export const {
       clientSecret: GITHUB_CLIENT_SECRET,
     }),
   ],
-  // usually not needed. bug: session.user does not get id assigned to it automatically.
-  // it works for server components but still not for client components using useSession
+
   callbacks: {
     async session({ session, user }: any) {
       if (session && user) {
-        // session.user.id = user.id
-        // session.user.userBalance = user.userBalance
       }
       return session
     },
