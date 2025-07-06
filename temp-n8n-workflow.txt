@@ -1,0 +1,199 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "d5e60eb2-267c-4f68-aefe-439031bcaceb",
+      "name": "OpenAI Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        280,
+        300
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "bD89O10SnfCDFToP",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=I want you to break down the following desired outcome into a list of independent, clearly-scoped tasks that can each be claimed and completed individually by a human or AI agent as part of a decentralized bounty platform.\n\nEach task should:\n\nBe concrete and independently actionable.\n\nHave a clear deliverable or completion criteria.\n\nBe atomic, meaning it can be done without needing to claim another task first.\n\nBe described in a way that can be turned into a task listing for a marketplace.\n\nDesired Outcome:\n{{ $json.body }}\n\nOutput format:\n\nTask Title\n\nDescription: [Concise but clear instruction]\n\nDeliverable: [What is expected upon completion]\n\nAcceptance criteria: [The standard the task will be judged by to be marked as completed, or that the task can be rejected for failing to meet]\n\nDependencies: [Any prerequisites or state required; \"None\" if truly atomic]. If dependent on another task, nest it in JSON format within the parent class it depends on.\n\ntaskCost: [Each task should estimate the amount of effort required to perform. Difficulty should scale from 1 to 100]",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are a friendly but professional Agent with the goal of helping the user meet their project goals when they are unsure of how to proceed, and may not even have an understanding of their own personal motivations. Your goal is to return a discrete list of tasks that will help them achieve their stated objective. This list will be checked by the user and then later discussed with an \"Administrator\" who will be responsible for ensuring these tasks are completed. "
+        }
+      },
+      "id": "41174c8a-6ac8-42bd-900e-ca15196600c5",
+      "name": "Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        580,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "58cdf091-ac53-4b76-bc72-a16e8663e2e7",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        100,
+        20
+      ],
+      "id": "387a0040-7b28-416b-8692-d166e0b47e19",
+      "name": "Webhook",
+      "webhookId": "58cdf091-ac53-4b76-bc72-a16e8663e2e7"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $execution.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        600,
+        300
+      ],
+      "id": "ab6df1d2-98e1-4cf6-9d38-aabeef6028e9",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.output.tasks }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        940,
+        20
+      ],
+      "id": "84869562-6e47-40c7-ad6a-a734b5c41342",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"tasks\": [\n    {\n      \"taskTitle\": \"Define Game Music Style\",\n      \"description\": \"Research and decide on the specific style and genre of music that aligns with the futuristic space exploration theme.\",\n      \"deliverable\": \"A written document outlining the chosen music style and genre, including references or examples.\",\n      \"acceptanceCriteria\": \"Document is clear, well-researched, and aligns with the game's theme.\",\n      \"dependencies\": \"None\",\n      \"taskCost\": \"90\"\n    },\n    {\n      \"taskTitle\": \"Create Music Mood Board\",\n      \"description\": \"Compile a mood board with audio clips, images, and descriptions that reflect the desired emotional tone for the game music.\",\n      \"deliverable\": \"A visual mood board that includes at least 5 audio samples and relevant thematic images.\",\n      \"acceptanceCriteria\": \"Mood board is visually appealing, coherent with the chosen music style, and provides an emotional direction.\",\n      \"dependencies\": \"None\",\n      \"taskCost\": \"60\"\n    },\n    {\n      \"taskTitle\": \"Compose Main Theme\",\n      \"description\": \"Compose the main theme music for the game, utilizing the defined music style and the mood board for inspiration.\",\n      \"deliverable\": \"An original music track of at least 2 minutes in length, representing the main theme.\",\n      \"acceptanceCriteria\": \"The track is original, fitting within the specified style and mood, and is of high audio quality.\",\n      \"dependencies\": \"Define Game Music Style, Create Music Mood Board\",\n      \"taskCost\": \"40\"\n    },\n    {\n      \"taskTitle\": \"Create Background Music Tracks\",\n      \"description\": \"Compose a series of background music tracks that can be used throughout various game levels, maintaining consistency with the main theme.\",\n      \"deliverable\": \"Three original music tracks, each 1-2 minutes in length, suitable for looping.\",\n      \"acceptanceCriteria\": \"All tracks are original, cohesive with the main theme, and fit within the defined style.\",\n      \"dependencies\": \"Compose Main Theme\",\n      \"taskCost\": \"40\"\n    },\n    {\n      \"taskTitle\": \"Develop Sound Effects\",\n      \"description\": \"Create custom sound effects to enhance the game experience, including effects for actions like jumping, collecting items, and interactions.\",\n      \"deliverable\": \"A collection of at least 10 original sound effects in high-quality audio format.\",\n      \"acceptanceCriteria\": \"All sound effects are original, varied, and enhance the gameplay experience as intended.\",\n      \"dependencies\": \"None\",\n      \"taskCost\": \"70\"\n    },\n    {\n      \"taskTitle\": \"Mix and Master Music Tracks\",\n      \"description\": \"Mix and master all composed tracks to ensure they are polished and ready for integration into the game.\",\n      \"deliverable\": \"Final versions of all music tracks, expertly mixed and mastered.\",\n      \"acceptanceCriteria\": \"Tracks are balanced, professional-quality audio that meets industry standards.\",\n      \"dependencies\": \"Compose Main Theme, Create Background Music Tracks\",\n      \"taskCost\": \"50\"\n    },\n    {\n      \"taskTitle\": \"Collaborate with Game Developers for Integration\",\n      \"description\": \"Work with developers to integrate the music and sound effects into the game engines, ensuring synchronization with gameplay.\",\n      \"deliverable\": \"Confirmation of music and sound effects successfully integrated into the game.\",\n      \"acceptanceCriteria\": \"All audio components are properly integrated and function as intended within the game environment.\",\n      \"dependencies\": \"Mix and Master Music Tracks, Develop Sound Effects\",\n      \"taskCost\": \"50\"\n    }\n  ]\n}\n",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        760,
+        320
+      ],
+      "id": "906ddc30-63fa-48c5-b8e3-0be96e7cfc80",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        860,
+        540
+      ],
+      "id": "1969286d-f422-41f8-bf1d-1fe3905e3a0e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "bD89O10SnfCDFToP",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "OpenAI Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateId": "self-building-ai-agent",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e30db9a729947ef0e04a4d94ff0e671c9b0ae8ee28a764406192d580d2a03bc"
+  }
+}
