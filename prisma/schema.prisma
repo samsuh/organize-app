@@ -52,7 +52,8 @@ model User {
   sessions      Session[]
   Task          Task[]
   Comment       Comment[]
-  Owner         Project[]
+  Owner         Project[] @relation("OwnerProjects")
+  AdminProjects Project[] @relation("AdminProjects")
 }
 
 model VerificationToken {
@@ -64,14 +65,18 @@ model VerificationToken {
 }
 
 model Project {
-  id          String @id @default(cuid())
-  slug        String @unique
-  description String
-  balance     Int @default(0)
-  tasks       Task[]
-  ownerId     String
+  id            String @id @default(cuid())
+  slug          String @unique
+  description   String
+  balance       Int @default(0)
+  tasks         Task[]
+  ownerId       String?
+  adminId       String?
+  ownerApproved Boolean @default(false)
+  adminApproved Boolean @default(false)
 
-  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  owner User? @relation("OwnerProjects", fields: [ownerId], references: [id], onDelete: Cascade)
+  admin User? @relation("AdminProjects", fields: [adminId], references: [id], onDelete: SetNull)
 
 
   createdAt DateTime @default(now())
